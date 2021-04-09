@@ -1,0 +1,198 @@
+---
+title: "J.K Dobbins and D'Andre Swift Comparisons"
+author: "Ambar Mishra"
+date: "3/26/2021"
+output: html_document
+---
+
+# Question
+
+Both J.K. Dobbins and D’Andre Swift flashed elite potential as rookies in 2020. Who do you currently prefer in dynasty? Which of these players do you view as more volatile heading into the 2021 season? 
+
+# Introduction
+In this report, I will analyze which player, D'Andre Swift or J.K Dobbins is the better player to keep in dynasty fantasy football. I will utilize my visualizations in order to analyze each player's strengths. 
+
+# Analysis 
+
+In this section, I will conduct my analysis on the fantasy data. 
+
+## Importing Library
+Reading in J.K. Dobbins dataset:
+
+```{r}
+library("readxl")
+```
+
+## Importting Data
+
+```{r}
+JK_data <- read_excel("J.K_Dobbins_Data.xlsx")
+Swift_data <- read_excel("D'Andre Swift Data.xlsx")
+```
+
+```{r}
+library(ggplot2)
+library(ggtext)
+```
+## Data Website
+
+I have recieved the fantasy data from both of these websites:
+
+https://fantasydata.com/nfl/dandre-swift-fantasy/21684  <- D'Andre swift data
+
+https://fantasydata.com/nfl/jk-dobbins-fantasy/21674  <- J.K Dobbins data 
+
+
+## Dobbins Visualizations
+
+```{r}
+ggplot(data = JK_data, aes(x = Weeks, y = FPTS), main = "J.K Dobbins Fantasy Points") + geom_line(color = 'blue') + geom_point() + labs(title = 'J.K Dobbins Fantasy Points')
+```
+
+As we can see from this graph, there is not a clear shape of the line plot. J.K Dobbins had mostly scored lower than 10 fantasy points however there is no consistency in his point totals. the points are either high in one week and below five points in the following week. 
+
+Another descriptive way to view this volatile distribution is through a histogram:
+
+```{r}
+ggplot(data = JK_data, aes(x = FPTS, bins = 30), main = "J.K Dobbins Fantasy Points") + geom_histogram(color = 'red', fill = 'lightblue') + labs(title = 'J.K Dobbins Fantasy Points (Histogram)')
+```
+
+There is no indiciation of a unimodal or a bimodal distribution in this histogram, which heavily indicates that his average fantasy points are scattered. This indicates a fair amount of volatility in Dobbins's fantasy point value. 
+
+I will form the same visualizations with D'Andre Swift's dataset
+
+## Swift Visualizations
+
+```{r}
+ggplot(data = Swift_data, aes(x = Weeks, y = FPTS), main = "J.K Dobbins Fantasy Points") + geom_line(color = 'blue') + geom_point() + labs(title = "D'Andre Swift Fantasy Points")
+```
+
+D'Andre Swift's fantasy point value has been volatile as each week can either provide a fantasy owner with above 10 points or lower than 10 points. The graph indicates that his point value can be either high or low due to this scale. 
+
+I will form a histogram to view Swift's data in a different perspective. 
+
+```{r}
+ggplot(data = Swift_data, aes(x = FPTS, bins = 30), main = "D'Andre Swift Fantasy Points") + geom_histogram(color = 'red', fill = 'lightblue') + labs(title = "D'Andre Swift Fantasy Points")
+```
+
+Swift's histogram is a bit cleaner than Dobbins histogram since Swift's histogram clearly indicates a bimodial distribution. This indicates that Swift is not as volatile, even if nearly half of his fantasy points are less than 10 points. 
+
+## Joint Line Plot
+
+I will create a joint line plot to see how Dobbins and Swift's fantasy points average visually compare with each other. 
+
+```{r}
+colors <- c("J.K Dobbins" = "blue", "D'Andre Swift" = 'red')
+joint = ggplot() + 
+  geom_line(data = JK_data, aes(x = Weeks, y = FPTS), color = "blue") +
+  geom_line(data = Swift_data, aes(x = Weeks, y = FPTS), color = "red") +
+  xlab('Weeks') +
+  ylab('FPTS') +
+  theme(legend.position = "right") +
+  labs(title = "J.K Dobbins (Blue) and  D'Andre Swift (red) Fantasy Points")
+  
+print(joint)
+```
+
+## Note: blue line = J.K Dobbins and red line = D'Andre Swift
+
+As we can see, the red line represents D'Andre Swift's fantasy points trend while the blue line represents J.K Dobbin's fantasy points trend. J.K Dobbins's line is lower than D'Andre Swift's red line which may inidcate a lower volatility. D'Andre Swift's line contains multiple zigzags which range from either low to high fantasy points score which indicates a higher volatity in points. Hence, I believe that D'Andre Swift is more volatine than J.K Dobbins in terms of fantasy points. This graph is a perfect visual representation of comapring volatility rates for both players. 
+
+
+# Category Comparisons
+
+## Recieving Yards
+
+Besides fantasy points, I believe that assessing these players based on their average recieving and running yards would be accurate. 
+
+Let us compare the recieving yards between the players:
+
+```{r}
+joint_2 = ggplot() + 
+  geom_line(data = JK_data, aes(x = Weeks, y = Rec_Yards), color = "purple") +
+  geom_line(data = Swift_data, aes(x = Weeks, y = Rec_Yards), color = "green") +
+  xlab('Weeks') +
+  ylab('Recieving Yards') +
+  theme(legend.position = "right") +
+  labs(title = "J.K Dobbins (purple) and D'Andre Swift (green) Fantasy Points")
+  
+print(joint_2)
+```
+
+
+## Note: Green line = D'Andre Swift, Purple line = J.K Dobbins
+
+Here is the mean recieving yards for each player:
+
+```{r}
+JK_Recieving_Mean = mean(JK_data$Rec_Yards)
+JK_Recieving_Mean
+```
+
+```{r}
+Swift_Recieving_Mean = mean(Swift_data$Rec_Yards)
+Swift_Recieving_Mean
+```
+
+With the mean amounts provided, D'Andre Swift has a higher recieving yards mean in comparison to J.K Dobbins with a difference of nearly 14 yards. Swift's green line has two peaks and mostly has an average above 10 recieving yards. On the other hand, J.K Dobbins has a lower trend with multiple peaks leading to a higher volatility rate. 
+
+## Rushing Yards
+
+Let us compare the rushing yards for both of these players
+
+Here is a visualization:
+
+```{r}
+joint_3 = ggplot() + 
+  geom_line(data = JK_data, aes(x = Weeks, y = Rush_Avg_Yds), color = "orange") +
+  geom_line(data = Swift_data, aes(x = Weeks, y = Rush_Avg_Yards), color = "brown") +
+  xlab('Weeks') +
+  ylab('Rushing Yards') +
+  theme(legend.position = "right")
+  
+print(joint_3)
+```
+
+## Note: Orange line = J.K Dobbins, Brown Line = D'Andre Swift
+
+I will calculate the means rushing yards here:
+
+```{r}
+JK_rushing_mean = mean(JK_data$Rush_Avg_Yds)
+JK_rushing_mean
+```
+
+```{r}
+Swift_rushing_mean = mean(Swift_data$Rush_Avg_Yards)
+Swift_rushing_mean
+```
+
+From the means, we can clearly see that J.K Dobbins has a higher rushing avg. yards by nearly 5 points. In our visualization, Dobbins graph seems highly volatile with 2 major peaks and then a more consistent trends in the later weeks. Meanwhile Swift retains a consistent graph with a few peaks but a mostly steady average. In terms of volatility, I believe that J.K Dobbins has a higher volatility. In terms of having a higher rushing average yards mean, I also believe that J.K Dobbins has a higher rushing average yards mean with 7.36 yards. 
+
+## Mean of FPTS
+
+J.K Dobbins average fantasy points are:
+```{r}
+mean_1 = mean(JK_data$FPTS)
+```
+
+D'Andre Swift's average fantasy points are :
+
+```{r}
+mean_2 =mean(Swift_data$FPTS)
+```
+
+```{r}
+mean_1 - mean_2
+```
+
+Dobbins has a higher amount of fantasy points average by just 0.39 fantasy points. It is a small difference, however this works in Dobbins's favor. 
+
+# Conclusion
+
+By counting all of the different categories, I can firmly state that I believe that I prefer J.K Dobbins in dynasty football. J.K Dobbins had a higher fantasy points average score and a higher rushing average while D'Andre Swift had a higher recieving average. Dobbins won two out of the three categories which I had chosen to assess which player would be better for dynasty football. In terms of volatility, I believe that D'Andre swift is volatile heading into the 2021 season. D'Andre swift is more volatile in terms of his Recieving Yards and Fantasy average points in comparison to J.K Dobbins. 
+
+## Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
+
